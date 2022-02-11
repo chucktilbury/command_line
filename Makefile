@@ -1,6 +1,16 @@
+OBJS	=	command_line.o memory.o
+CONFIG	=	-DUSE_EXCESS=1 -DEXCESS_REQUIRED=1
 
-test_cl: command_line.c memory.c
-	gcc -Wall -Wextra -g -DTESTING -DUSE_EXCESS=1 -DEXCESS_REQUIRED=1 -o test_cl command_line.c memory.c
+all: test_cl libcmd.a
+
+.c.o:
+	gcc -Wall -Wextra -g $(CONFIG) -c $< -o $@
+
+test_cl: $(OBJS)
+	gcc -Wall -Wextra -g $(CONFIG) -o test_cl test_cl.c $(OBJS)
+
+libcmd.a: $(OBJS)
+	ar crs libcmd.a $(OBJS)
 
 clean:
-	-rm -f test_cl
+	-rm -f test_cl libcmd.a $(OBJS)
